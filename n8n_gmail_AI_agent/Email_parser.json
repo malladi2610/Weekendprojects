@@ -1,0 +1,1864 @@
+{
+  "name": "Email_parser",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini-2025-08-07",
+          "mode": "list",
+          "cachedResultName": "gpt-5-mini-2025-08-07"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2256,
+        2656
+      ],
+      "id": "d29e85be-d1ea-4bbf-92c1-cb7770ddfa31",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "fhRdPB2DP1IUBxx0",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function normalizeLinkedInJobUrl(rawUrl, jobId) {\n  if (jobId) return `https://www.linkedin.com/jobs/view/${jobId}/`;\n\n  const s = String(rawUrl || \"\").trim();\n  const m =\n    s.match(/\\/jobs\\/view\\/(\\d+)/) ||\n    s.match(/\\/comm\\/jobs\\/view\\/(\\d+)/);\n\n  if (m) return `https://www.linkedin.com/jobs/view/${m[1]}/`;\n  return s;\n}\n\nconst items = $input.all();\n\nreturn items.map(item => {\n  const j = item.json || {};\n  const brightdataUrl = normalizeLinkedInJobUrl(j.jobUrl, j.jobId);\n\n  return {\n    json: {\n      ...j,\n      brightdataUrl\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        2016
+      ],
+      "id": "f9674367-32a3-4b5c-9bc0-24fc99e10d0c",
+      "name": "Linkedin_cleaning_block"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        688,
+        1936
+      ],
+      "id": "9b0aefd0-8c97-4479-9c7f-41b012ac4299",
+      "name": "Wait",
+      "webhookId": "c2795ced-fb5a-4798-bfe2-f78d5f6856e5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c3ef6ad-3193-419b-82e1-18cb4e729137",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "ready",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        912,
+        2016
+      ],
+      "id": "de207d6a-8aae-4748-898d-77512cb8514b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nconst input = items.map(i => ({\n  url: i.json.brightdataUrl || i.json.jobUrl\n}));\n\nreturn [{\n  json: { input }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        2016
+      ],
+      "id": "85b7cc6a-c624-4160-b76c-291431fff2c8",
+      "name": "Linkedin_cleaning_block_2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c3ef6ad-3193-419b-82e1-18cb4e729137",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "ready",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        912,
+        2304
+      ],
+      "id": "ebb39983-660e-42f1-9faa-00b2149cf5d5",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        688,
+        2512
+      ],
+      "id": "117cea73-d233-42f9-8311-8cda3e2f631b",
+      "name": "Wait2",
+      "webhookId": "ed06b3a2-6a4a-4263-b7ff-6dc7183cb623"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1c3ef6ad-3193-419b-82e1-18cb4e729137",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "ready",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        912,
+        2592
+      ],
+      "id": "eb9c2b64-b276-4b3d-8e52-98998517d90c",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "jsCode": "function decodeHtml(s) {\n  return String(s || \"\")\n    .replace(/&nbsp;/gi, \" \")\n    .replace(/&amp;/gi, \"&\")\n    .replace(/&quot;/gi, '\"')\n    .replace(/&#39;|&apos;/gi, \"'\")\n    .replace(/&lt;/gi, \"<\")\n    .replace(/&gt;/gi, \">\")\n    .replace(/&#x([0-9a-fA-F]+);/g, (_, h) => String.fromCharCode(parseInt(h, 16)));\n}\n\nfunction stripTags(html) {\n  return decodeHtml(String(html || \"if\"))\n    .replace(/<br\\s*\\/?>/gi, \"\\n\")\n    .replace(/<\\/p>/gi, \"\\n\")\n    .replace(/<\\/div>/gi, \"\\n\")\n    .replace(/<\\/li>/gi, \"\\n\")\n    .replace(/<li[^>]*>/gi, \"• \")\n    .replace(/<[^>]+>/g, \"\")\n    .replace(/\\r/g, \"\")\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .trim();\n}\n\nconst items = $input.all();\n\nreturn items.map(it => {\n  const j = it.json || {};\n  return {\n    json: {\n      platform: \"linkedin\",\n      jobId: String(j.job_posting_id || j.job_id || j.id || \"\"),\n      jobTitle: j.job_title || null,\n      company: j.company_name || null,\n      location: j.job_location || j.location || j.country_code || null,\n      jobUrl: j.url || j.job_url || j.brightdataUrl || null,\n      applyUrl: j.apply_link || null,\n      description: stripTags(j.job_description_formatted || \"\"),\n      postedAt: j.job_posted_date || null,\n      scrapedAt: j.timestamp || null,\n      raw: j\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        2016
+      ],
+      "id": "3746240a-94ca-49d3-85a8-daebf23075f3",
+      "name": "Normalise_linkedin"
+    },
+    {
+      "parameters": {
+        "jsCode": "function cleanText(s) {\n  return String(s || \"\")\n    .replace(/\\r/g, \"\")\n    .replace(/[ \\t]+\\n/g, \"\\n\")\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .trim();\n}\n\nconst items = $input.all();\n\nreturn items.map((it) => {\n  const j = it.json || {};\n  return {\n    json: {\n      platform: \"glassdoor\",\n      jobId: String(j.job_posting_id || j.jobListingId || j.job_posting_id || \"\"),\n      jobTitle: j.job_title || null,\n      company: j.company_name || null,\n      location: j.job_location || null,\n      jobUrl: j.url || null,\n      applyUrl: j.job_application_link || null,\n      description: cleanText(j.job_overview || \"\"),\n      postedAt: j.job_posted_date || null,   // if it exists in some payloads\n      scrapedAt: j.timestamp || null,\n      raw: j,\n    },\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        2304
+      ],
+      "id": "d9671c59-adbb-4d35-9352-3a2fcbc3a7b1",
+      "name": "Normalise_glassdoor"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        2592
+      ],
+      "id": "eef15b79-7fbd-47fa-9e85-e03dbb9e01db",
+      "name": "Normalise_indeed"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b2e50baf-1ce8-4130-af77-0e965b674cc8",
+              "name": "cv_embedded",
+              "value": "{   \"profileId\": \"cv_embedded\",   \"domain\": \"Embedded Systems\",   \"headline\": \"Embedded software engineer specializing in real-time firmware, microcontroller systems, hardware–software integration, and performance-optimized embedded solutions.\",   \"seniorityTarget\": {     \"preferredLevels\": [\"Intern\", \"Junior\", \"Mid\"],     \"avoidLevels\": [\"Senior\", \"Principal\", \"Lead/Architect\"]   },   \"targetRoles\": [     \"Embedded Software Engineer\",     \"Firmware Engineer\",     \"Real-Time Embedded Engineer\",     \"Embedded Systems Developer\",     \"IoT/Edge Firmware Engineer\"   ],   \"domainFocus\": {     \"coreAreas\": [       \"Embedded firmware and real-time systems\",       \"Low-level hardware interfacing\",       \"Device drivers and BSP integration\",       \"Performance, stability, and reliability\"     ],     \"typicalSystems\": [       \"MCU-based systems\",       \"Sensor/actuator networks\",       \"Edge and IoT devices\",       \"Robotics/automation controllers\"     ],     \"keywordsPriority\": {       \"mustHave\": [         \"C\",         \"C++\",         \"embedded firmware\",         \"microcontroller\",         \"bare-metal\",         \"real-time\",         \"device drivers\"       ],       \"strongPlus\": [         \"RTOS\",         \"embedded Linux\",         \"FreeRTOS\",         \"UART\",         \"I2C\",         \"SPI\",         \"CAN\",         \"USB\"       ],       \"niceToHave\": [         \"Assembly\",         \"ARM Cortex\",         \"debugging tools\",         \"hardware-software integration\",         \"optimization\"       ]     }   },   \"techSignature\": {     \"languages\": [\"C\", \"C++\", \"Rust\", \"Python\", \"Assembly (optional)\"],     \"platforms\": [\"ARM Cortex (STM32, nRF)\", \"AVR\", \"ESP32\", \"Raspberry Pi\"],     \"rtos_os\": [\"FreeRTOS\", \"embedded Linux\", \"bare-metal\"],     \"protocols\": [\"UART\", \"SPI\", \"I2C\", \"CAN\", \"USB\"],     \"tools\": [\"Git\", \"GDB\", \"JTAG/SWD\", \"Oscilloscope\", \"Logic Analyzer\", \"Docker/CI/CD\"],     \"testing_debug\": [       \"unit/integration testing\",       \"HIL/embedded test benches\",       \"system profiling\",       \"performance optimization\"     ]   },   \"proofOfWork\": {     \"topProjects\": [       {         \"name\": \"Embedded Quadcopter Control System\",         \"whatBuilt\": \"Designed real-time control firmware in Rust + C, implementing PID and sensor fusion loops with strict latency constraints.\",         \"hardEvidence\": [           \"Rust-based real-time stack with Mahony filter at 200 Hz\",           \"Robust UART protocol with CRC, recovery, and watchdog safety\"         ],         \"keywords\": [\"real-time\", \"Rust\", \"firmware\", \"PID\", \"sensor fusion\"]       },       {         \"name\": \"Cycle-accurate NES Emulator\",         \"whatBuilt\": \"Implemented low-level emulator including CPU, PPU, mappers, interrupts and memory-mapped I/O.\",         \"hardEvidence\": [\"Verified across test ROM suite\", \"Detailed instruction timing validation\"],         \"keywords\": [\"low-level programming\", \"memory-mapped I/O\", \"system debugging\"]       }     ],     \"experienceHighlights\": [       {         \"org\": \"UVASKA\",         \"role\": \"Robotics Software Engineer\",         \"impact\": [           \"Delivered firmware + control integration for custom robots\",           \"Improved hardware interface stability across missions\"         ],         \"keywords\": [\"C++\", \"Python\", \"integration testing\", \"robotics\"]       },       {         \"org\": \"Epson\",         \"role\": \"Robotics Software Intern\",         \"impact\": [           \"Built Python control interface for SCARA hardware\",           \"Validated real hardware control loops in production testbeds\"         ],         \"keywords\": [\"hardware validation\", \"system integration\"]       }     ]   },   \"filters\": {     \"hardRejectIf\": [       \"Role is primarily web/frontend or purely cloud/datascience\",       \"Role is exclusively hardware design (no firmware)\",       \"Position demands >7+ years experience for junior/mid level\"     ],     \"softPenalties\": [       \"Few or no embedded-specific keywords\",       \"Role focuses mainly on high-level application software with minimal embedded systems context\"     ]   },   \"scoringRubric\": {     \"scoreFrom0To100\": true,     \"rules\": [       { \"if\": \"job mentions ≥3 mustHave keywords\", \"delta\": 40 },       { \"if\": \"job mentions ≥2 strongPlus keywords\", \"delta\": 25 },       { \"if\": \"role explicitly lists key embedded tasks (real-time, firmware, drivers)\", \"delta\": 20 },       { \"if\": \"job seniority far above target (e.g., >5y expectation)\", \"delta\": -30 },       { \"if\": \"domain mismatch (cloud-only, frontend, backend)\", \"delta\": -40 }     ],     \"decisionThresholds\": { \"KEEP\": 75, \"MAYBE\": 50 }   } }",
+              "type": "string"
+            },
+            {
+              "id": "a3d8823b-c393-4fdd-8346-a472ac84e1e3",
+              "name": "cv_ai",
+              "value": "{   \"profileId\": \"cv_ai\",   \"domain\": \"AI Software Engineering\",   \"headline\": \"AI software engineer with experience in multimodal models, deep learning systems, performance optimization, and analytical modeling of AI accelerators.\",   \"seniorityTarget\": {     \"preferredLevels\": [\"Intern\", \"Junior\", \"Mid\"],     \"avoidLevels\": [\"Senior\", \"Principal\", \"Lead Manager\"]   },   \"targetRoles\": [     \"AI Software Engineer\",     \"Machine Learning Engineer\",     \"Applied AI Engineer\",     \"AI Research Engineer\"   ],   \"domainFocus\": {     \"coreAreas\": [       \"Deep learning model development\",       \"Multimodal AI systems\",       \"AI performance modeling and optimization\",       \"Data-driven evaluation and benchmarking\"     ],     \"typicalSystems\": [       \"Multimodal vision-language models\",       \"Neural network training and fine-tuning pipelines\",       \"AI workload mapping and accelerator modeling\",       \"On-device and edge AI systems\"     ],     \"keywordsPriority\": {       \"mustHave\": [         \"Python\",         \"deep learning\",         \"neural networks\",         \"machine learning\",         \"model training\",         \"model evaluation\"       ],       \"strongPlus\": [         \"PyTorch\",         \"Hugging Face Transformers\",         \"multimodal\",         \"fine-tuning\",         \"ablation studies\",         \"performance analysis\"       ],       \"niceToHave\": [         \"TensorFlow Lite\",         \"CLIP\",         \"DeepSpeed\",         \"W&B\",         \"Bayesian methods\"       ]     }   },   \"techSignature\": {     \"languages\": [\"Python\", \"C\", \"C++\", \"Rust\"],     \"frameworks_tools\": [       \"PyTorch\",       \"DeepSpeed\",       \"TensorFlow Lite\",       \"Hugging Face Transformers\",       \"Git\"     ],     \"libraries\": [       \"NumPy\",       \"Pandas\",       \"OpenCV\",       \"CLIP\",       \"W&B (Weights & Biases)\"     ],     \"operatingSystems\": [\"Linux\"]   },   \"proofOfWork\": {     \"topProjects\": [       {         \"name\": \"Visual Instruction-Tuned LLaVA for Multimodal Reasoning\",         \"whatBuilt\": \"Reproduced and fine-tuned the LLaVA-1.5 multimodal model integrating CLIP-ViT-L-336px with Vicuna 7B.\",         \"hardEvidence\": [           \"Ablation study replacing Vicuna 7B with Gemma 2B\",           \"Reduced training time by 80% using DeepSpeed ZeRO-3 CPU offloading\",           \"Validated inference consistency using CLI benchmarking\"         ],         \"keywords\": [           \"multimodal\",           \"LLaVA\",           \"CLIP\",           \"fine-tuning\",           \"DeepSpeed\",           \"ablation study\"         ]       },       {         \"name\": \"TrackIn: Real-Time Indoor Tracking and Activity Recognition\",         \"whatBuilt\": \"Built a smartphone-based tracking system with Bayesian localization and an on-device TensorFlow Lite classifier.\",         \"hardEvidence\": [           \"98% activity classification accuracy\",           \"Multi-sensor processing using Butterworth filtering\",           \"Sub-second inference latency on Android\"         ],         \"keywords\": [           \"Bayesian localization\",           \"particle filtering\",           \"TensorFlow Lite\",           \"activity recognition\",           \"edge AI\"         ]       }     ],     \"experienceHighlights\": [       {         \"org\": \"IMEC\",         \"role\": \"Graduate Research Student\",         \"impact\": [           \"Designed AeDAM framework for mapping exploration of AI workloads on event-driven architectures\",           \"Built analytical models for energy, latency, and area estimation\",           \"Achieved up to 2.5× faster exploration and 52% latency improvement over ZigZag\"         ],         \"keywords\": [           \"AI accelerators\",           \"mapping exploration\",           \"analytical modeling\",           \"performance optimization\"         ]       }     ]   },   \"filters\": {     \"hardRejectIf\": [       \"Role is primarily frontend or full-stack web development\",       \"Role is non-technical AI product management\",       \"Role is pure data analyst / business intelligence\"     ],     \"softPenalties\": [       \"No machine learning or neural network content\",       \"No hands-on model development or evaluation\"     ]   },   \"scoringRubric\": {     \"scoreFrom0To100\": true,     \"rules\": [       { \"if\": \"job involves deep learning or neural network development\", \"delta\": 35 },       { \"if\": \"job mentions PyTorch or Hugging Face\", \"delta\": 25 },       { \"if\": \"job involves model fine-tuning, benchmarking, or evaluation\", \"delta\": 20 },       { \"if\": \"job is primarily data analytics without ML modeling\", \"delta\": -25 },       { \"if\": \"domain mismatch (non-AI software role)\", \"delta\": -40 }     ],     \"decisionThresholds\": {       \"KEEP\": 70,       \"MAYBE\": 45     }   } }",
+              "type": "string"
+            },
+            {
+              "id": "745c0ce6-6574-4886-b861-4afb99827084",
+              "name": "cv_edge_ai",
+              "value": "{   \"profileId\": \"cv_edge_ai\",   \"domain\": \"Edge AI / Embedded AI\",   \"headline\": \"Embedded and AI systems engineer focused on edge AI deployment, on-device inference, and optimized embedded software for real-time intelligent systems.\",   \"seniorityTarget\": {     \"preferredLevels\": [\"Intern\", \"Junior\", \"Mid\"],     \"avoidLevels\": [\"Senior\", \"Principal\", \"Lead Manager\"]   },   \"targetRoles\": [     \"Edge AI Engineer\",     \"Embedded AI Engineer\",     \"Applied AI Engineer (Edge)\",     \"TinyML / On-Device AI Engineer\"   ],   \"domainFocus\": {     \"coreAreas\": [       \"Edge AI deployment\",       \"On-device machine learning inference\",       \"Embedded software for AI-enabled systems\",       \"System optimization for latency and efficiency\"     ],     \"typicalSystems\": [       \"Embedded microcontroller-based systems\",       \"Smartphones and mobile edge devices\",       \"Sensor-driven intelligent systems\",       \"AI-enabled robotic and control platforms\"     ],     \"keywordsPriority\": {       \"mustHave\": [         \"edge AI\",         \"on-device inference\",         \"embedded software\",         \"C/C++\",         \"Python\",         \"TensorFlow Lite\"       ],       \"strongPlus\": [         \"Tiny AI\",         \"model optimization\",         \"quantized inference\",         \"PyTorch\",         \"ONNX\"       ],       \"niceToHave\": [         \"sensor fusion\",         \"real-time systems\",         \"Bayesian localization\"       ]     }   },   \"techSignature\": {     \"languages\": [\"C\", \"C++\", \"Python\", \"Rust\"],     \"microcontrollers\": [       \"ATmega328P\",       \"ESP32\",       \"nRF51822 (ARM Cortex-M0)\"     ],     \"operatingSystems\": [\"Linux\"],     \"frameworks_tools\": [       \"TensorFlow Lite\",       \"ONNX\",       \"PyTorch (learning)\",       \"Git\",       \"Docker\"     ],     \"protocols\": [       \"SPI\",       \"I2C\",       \"UART\"     ]   },   \"proofOfWork\": {     \"topProjects\": [       {         \"name\": \"TrackIn: Real-Time Indoor Tracking and Activity Recognition\",         \"whatBuilt\": \"Developed a smartphone-based edge AI system combining Bayesian localization, particle filtering, and an on-device TensorFlow Lite classifier.\",         \"hardEvidence\": [           \"98% activity classification accuracy\",           \"Sub-second inference latency on Android\",           \"Multi-sensor fusion using Butterworth filtering\"         ],         \"keywords\": [           \"edge AI\",           \"TensorFlow Lite\",           \"on-device inference\",           \"sensor fusion\",           \"Tiny AI\"         ]       },       {         \"name\": \"Embedded Quadcopter Control System\",         \"whatBuilt\": \"Implemented a real-time flight control system in Rust with FSM-based safety logic, PID loops, and sensor fusion.\",         \"hardEvidence\": [           \"Mahony sensor fusion at 200 Hz\",           \"Fault-tolerant UART protocol with recovery\",           \"Hardware-in-the-loop testing on Cortex-M0\"         ],         \"keywords\": [           \"real-time systems\",           \"embedded control\",           \"sensor fusion\",           \"hardware-in-the-loop\"         ]       }     ],     \"experienceHighlights\": [       {         \"org\": \"IMEC\",         \"role\": \"Graduate Research Student\",         \"impact\": [           \"Designed AeDAM framework for mapping exploration of AI workloads\",           \"Built analytical models for energy, latency, and area estimation\",           \"Validated models on SENECA neuromorphic architecture\"         ],         \"keywords\": [           \"AI workloads\",           \"performance modeling\",           \"edge accelerator research\"         ]       }     ]   },   \"filters\": {     \"hardRejectIf\": [       \"Role is purely cloud-based ML with no edge or embedded component\",       \"Role is frontend or full-stack web development\",       \"Role is data analyst or BI-focused\"     ],     \"softPenalties\": [       \"No on-device inference or deployment responsibilities\",       \"No embedded or systems-level context\"     ]   },   \"scoringRubric\": {     \"scoreFrom0To100\": true,     \"rules\": [       { \"if\": \"job involves edge AI or on-device inference\", \"delta\": 35 },       { \"if\": \"job mentions TensorFlow Lite or model optimization\", \"delta\": 25 },       { \"if\": \"job involves embedded software for AI systems\", \"delta\": 20 },       { \"if\": \"job is cloud-only ML or data science\", \"delta\": -30 },       { \"if\": \"domain mismatch (non-AI or non-embedded role)\", \"delta\": -40 }     ],     \"decisionThresholds\": {       \"KEEP\": 70,       \"MAYBE\": 45     }   } }",
+              "type": "string"
+            },
+            {
+              "id": "e15c2af3-1939-404f-8d2e-61c9cae0f93f",
+              "name": "cv_robotics",
+              "value": "{   \"profileId\": \"cv_robotics\",   \"domain\": \"Robotics Software Engineering\",   \"headline\": \"Robotics software engineer with hands-on experience in industrial manipulators, drones, ROS-based systems, and real-time embedded control, focused on reliable hardware–software integration.\",   \"seniorityTarget\": {     \"preferredLevels\": [\"Intern\", \"Junior\", \"Mid\"],     \"avoidLevels\": [\"Senior\", \"Principal\", \"Lead Manager\"]   },   \"targetRoles\": [     \"Robotics Software Engineer\",     \"Robotics Engineer\",     \"Robotics Software Developer\",     \"Robotics Systems Engineer\"   ],   \"domainFocus\": {     \"coreAreas\": [       \"Robot motion control and kinematics\",       \"Real-time robotic systems\",       \"Hardware–software integration\",       \"Robotics system testing and validation\"     ],     \"typicalSystems\": [       \"Industrial manipulators (6-axis, 7-axis)\",       \"SCARA robots\",       \"Mobile and aerial robots\",       \"Warehouse automation systems\"     ],     \"keywordsPriority\": {       \"mustHave\": [         \"robotics\",         \"motion control\",         \"kinematics\",         \"real-time\",         \"C++\",         \"Python\"       ],       \"strongPlus\": [         \"ROS\",         \"hardware–software integration\",         \"SPI\",         \"I2C\",         \"UART\",         \"embedded systems\"       ],       \"niceToHave\": [         \"Gazebo\",         \"OpenCV\",         \"MQTT\",         \"industrial robots\",         \"system testing\"       ]     }   },   \"techSignature\": {     \"languages\": [\"C\", \"C++\", \"Python\", \"Rust\"],     \"microcontrollers\": [       \"ATmega328P\",       \"ESP32\",       \"nRF51822 (ARM Cortex-M0)\"     ],     \"operatingSystems\": [\"Linux\"],     \"frameworks_tools\": [       \"ROS\",       \"Git\",       \"Docker\"     ],     \"protocols\": [       \"SPI\",       \"I2C\",       \"UART\",       \"MQTT\"     ]   },   \"proofOfWork\": {     \"topProjects\": [       {         \"name\": \"Embedded Quadcopter Control System\",         \"whatBuilt\": \"Implemented a real-time flight control stack in Rust with safety-first FSM, PID loops, and Mahony sensor fusion.\",         \"hardEvidence\": [           \"Mahony sensor fusion at 200 Hz\",           \"Fault-tolerant UART protocol with checksums and recovery\",           \"Hardware-in-the-loop testing on Cortex-M0\"         ],         \"keywords\": [           \"real-time control\",           \"PID\",           \"sensor fusion\",           \"FSM\",           \"embedded robotics\"         ]       },       {         \"name\": \"Vargi Bots – Automated Warehouse Management System\",         \"whatBuilt\": \"Designed a ROS-based warehouse automation system using dual UR5 manipulators, computer vision, and MQTT communication.\",         \"hardEvidence\": [           \"Robot coordination via modular Python APIs\",           \"Simulation and validation in Gazebo\",           \"ROS topic introspection and debugging\"         ],         \"keywords\": [           \"ROS\",           \"industrial robotics\",           \"warehouse automation\",           \"computer vision\"         ]       }     ],     \"experienceHighlights\": [       {         \"org\": \"UVASKA\",         \"role\": \"Robotics Software Engineer\",         \"impact\": [           \"Developed software stack for custom 7-axis and 6-axis articulated robots\",           \"Implemented kinematics and motion planning algorithms\",           \"Integrated hardware interfaces and performed system testing\"         ],         \"keywords\": [           \"motion planning\",           \"robot kinematics\",           \"system integration\",           \"industrial manipulators\"         ]       },       {         \"org\": \"Epson\",         \"role\": \"Robotics Software Intern\",         \"impact\": [           \"Developed Python interface on Raspberry Pi for EPSON SCARA robots\",           \"Tested and validated control on physical robot hardware\",           \"Assisted in automation system using robot vision module\"         ],         \"keywords\": [           \"SCARA robots\",           \"robot control\",           \"hardware validation\"         ]       }     ]   },   \"filters\": {     \"hardRejectIf\": [       \"Role is primarily non-robotics software\",       \"Role is purely mechanical design with no software responsibility\",       \"Role is data analyst or business intelligence focused\"     ],     \"softPenalties\": [       \"No robot motion, control, or integration responsibilities\",       \"No hands-on robot software development or testing\"     ]   },   \"scoringRubric\": {     \"scoreFrom0To100\": true,     \"rules\": [       { \"if\": \"job involves robotics software development or robot control\", \"delta\": 35 },       { \"if\": \"job mentions ROS or industrial manipulators\", \"delta\": 25 },       { \"if\": \"job includes motion planning, kinematics, or real-time control\", \"delta\": 20 },       { \"if\": \"job is primarily simulation-only or theoretical robotics\", \"delta\": -20 },       { \"if\": \"domain mismatch (non-robotics role)\", \"delta\": -40 }     ],     \"decisionThresholds\": {       \"KEEP\": 70,       \"MAYBE\": 45     }   } }",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2032,
+        2416
+      ],
+      "id": "7655fe42-1031-4f97-ac29-0d6801b140dc",
+      "name": "Set-CV"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "28ecea8e-cff1-8017-8644-cacaeec0f62d",
+          "mode": "list",
+          "cachedResultName": "Job Applications Tracker",
+          "cachedResultUrl": "https://www.notion.so/28ecea8ecff180178644cacaeec0f62d"
+        },
+        "title": "job database",
+        "simple": false,
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Company Name|title",
+              "title": "={{ $json.notion_company }}"
+            },
+            {
+              "key": "Category|select",
+              "selectValue": "={{ $json.notion_category}}"
+            },
+            {
+              "key": "Link|url",
+              "urlValue": "={{ $json.notion_link }}"
+            },
+            {
+              "key": "Platform|select",
+              "selectValue": "={{ $json.notion_platform }}"
+            },
+            {
+              "key": "Job Title|rich_text",
+              "textContent": "={{ $json.notion_jobTitle }}"
+            },
+            {
+              "key": "Decision|select",
+              "selectValue": "={{ $json.notion_decision }}"
+            },
+            {
+              "key": "Reasons|rich_text",
+              "textContent": "={{ $json.notion_reasonText }}"
+            },
+            {
+              "key": "Fit Score|number",
+              "numberValue": "={{ $json.notion_fitScore }}"
+            },
+            {
+              "key": "Reminder data|date",
+              "includeTime": false,
+              "date": "={{\n  (() => {\n    const base = $json.postedAt\n      ? new Date($json.postedAt.slice(0,10))\n      : new Date($now.toISODate());\n\n    base.setDate(base.getDate() + 3);\n\n    return base.toISOString().slice(0,10); // YYYY-MM-DD\n  })()\n}}\n"
+            },
+            {
+              "key": "Date Posted|date",
+              "includeTime": false,
+              "date": "={{ $json.postedAt }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        3280,
+        2656
+      ],
+      "id": "97fd964c-f9ce-46e1-8f7a-f59d40fa57e1",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "bkNwM4VuYJbLIBja",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -656,
+        2032
+      ],
+      "id": "69a75e33-60ae-4201-b0ca-b4bcd20d6245",
+      "name": "Mark a message as read",
+      "webhookId": "3da41210-9265-42aa-bb5f-b0f6197f3a03",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "inwJSuWi6BJPgJxb",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -880,
+        2544
+      ],
+      "id": "ed5219f0-425e-4566-8eb5-4dbe3465eb0f",
+      "name": "Loop over"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "Label_8163444995902261724"
+          ],
+          "q": "={{ $json.gmailQuery }}",
+          "readStatus": "unread"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -1104,
+        2544
+      ],
+      "id": "bf3f50e9-cb1b-444a-840e-1b2f6826ea7b",
+      "name": "Emails from Followup label",
+      "webhookId": "59b1d4f0-1d61-41b9-bad8-b463bddd9c0d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "inwJSuWi6BJPgJxb",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ ($json.from?.value?.[0]?.address || '').trim().toLowerCase() }}",
+                    "rightValue": "=jobs-noreply@linkedin.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "112b94fb-c002-41e7-8477-b153062d0031"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "linkedin"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "2b11981e-75cf-4362-9d3a-84a49c9cc240",
+                    "leftValue": "={{ ($json.from?.value?.[0]?.address || '').trim().toLowerCase() }}",
+                    "rightValue": "noreply@glassdoor.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "7be05791-fef1-4281-a592-0a6326c38890",
+                    "leftValue": "={{ ($json.from?.value?.[0]?.address || '').trim().toLowerCase() }}",
+                    "rightValue": "alert@indeed.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "d789c91e-3001-49ad-b6ca-fce148336d6e",
+                    "leftValue": "={{ ($json.from?.value?.[0]?.address || '').trim().toLowerCase() }}",
+                    "rightValue": "jobalerts-noreply@linkedin.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "linkedin"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4639605e-ee5d-4580-924f-3f91035605cf",
+                    "leftValue": "={{ ($json.from?.value?.[0]?.address || '').trim().toLowerCase() }}",
+                    "rightValue": "jobs-listings@linkedin.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -656,
+        2224
+      ],
+      "id": "cb98d32c-1dbf-4e4f-89d6-7ae0952c010d",
+      "name": "Linkedin, glassdoor,indeed segregator"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nfunction decodeHtml(s) {\n  return String(s || \"\")\n    .replace(/&nbsp;/gi, \" \")\n    .replace(/&amp;/gi, \"&\")\n    .replace(/&quot;/gi, '\"')\n    .replace(/&#39;|&apos;/gi, \"'\")\n    .replace(/&lt;/gi, \"<\")\n    .replace(/&gt;/gi, \">\")\n    .replace(/&euro;/gi, \"€\")\n    .replace(/&ndash;/gi, \"–\")\n    .replace(/&rsquo;/gi, \"’\");\n}\n\nfunction stripTags(html) {\n  return decodeHtml(String(html || \"\"))\n    .replace(/<br\\s*\\/?>/gi, \"\\n\")\n    .replace(/<\\/p>/gi, \"\\n\")\n    .replace(/<[^>]+>/g, \"\")\n    .replace(/\\r/g, \"\")\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .trim();\n}\n\nfunction getRawParagraphs(html) {\n  const h = String(html || \"\");\n  return h\n    .split(/<\\/p>/i)\n    .map(p => p.replace(/^\\s*<p[^>]*>/i, \"\").trim())\n    .filter(Boolean);\n}\n\nfunction isFooterText(txt) {\n  const t = (txt || \"\").toLowerCase();\n  return (\n    t.includes(\"unsubscribe:\") ||\n    t.includes(\"you are receiving\") ||\n    t.includes(\"this email was intended for\") ||\n    t.includes(\"help:\") ||\n    t.includes(\"©\") ||\n    t.includes(\"linkedin corporation\") ||\n    t.includes(\"registered trademarks\")\n  );\n}\n\nfunction extractLinkedInJobId(url) {\n  const m = String(url || \"\").match(/\\/comm\\/jobs\\/view\\/(\\d+)/i);\n  return m ? m[1] : null;\n}\n\nfunction findLinkedInJobHrefsInParagraph(rawP) {\n  const re = /href=\"(https:\\/\\/www\\.linkedin\\.com\\/comm\\/jobs\\/view\\/\\d+[^\"]*)\"/gi;\n  const out = [];\n  let m;\n  while ((m = re.exec(rawP)) !== null) out.push(m[1]);\n  return out;\n}\n\nfunction getHtmlField(j) {\n  for (const k of Object.keys(j || {})) {\n    const low = k.toLowerCase();\n    if (low.includes(\"textas\") && low.includes(\"html\")) return j[k];\n  }\n  return j.textAsHtml || j.textAsHTML || j.textAshtml || \"\";\n}\n\nlet out = [];\nconst seen = new Set();\n\nfor (const item of items) {\n  const j = item.json || {};\n  const htmlRaw = getHtmlField(j);\n  if (!htmlRaw) continue;\n\n  const html = decodeHtml(htmlRaw);\n  const rawParagraphs = getRawParagraphs(html);\n\n  for (const rawP of rawParagraphs) {\n    const textP = stripTags(rawP);\n    if (!textP) continue;\n    if (isFooterText(textP)) break;\n\n    // ✅ Skip the “reference job” paragraph that causes null/null/null\n    if (/^jobs similar to\\b/i.test(textP)) continue;\n\n    const jobUrls = findLinkedInJobHrefsInParagraph(rawP);\n    if (!jobUrls.length) continue;\n\n    const lines = textP.split(\"\\n\").map(s => s.trim()).filter(Boolean);\n    const cleanLines = lines.filter(l => !/^view job:/i.test(l));\n\n    const jobTitle = cleanLines.length >= 1 ? cleanLines[0] : null;\n    const company  = cleanLines.length >= 2 ? cleanLines[1] : null;\n    const location = cleanLines.length >= 3 ? cleanLines[2] : null;\n\n    // ✅ Extra safety: if title/company missing, don’t emit anything\n    if (!jobTitle || !company) continue;\n\n    for (const jobUrl of jobUrls) {\n      const jobId = extractLinkedInJobId(jobUrl);\n      const uniqueKey = jobId ? `linkedin:${jobId}` : `linkedin:${jobUrl}`;\n\n      if (seen.has(uniqueKey)) continue;\n      seen.add(uniqueKey);\n\n      out.push({\n        platform: \"linkedin\",\n        jobTitle,\n        company,\n        location,\n        jobUrl,\n        jobId: jobId || null,\n        uniqueKey,\n      });\n    }\n  }\n}\n\nreturn out.map(r => ({ json: r }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        2016
+      ],
+      "id": "17a165d5-75fa-40ca-87f1-8eae80780cea",
+      "name": "Linkedin_parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nfunction decodeHtml(s) {\n  return String(s || \"\")\n    .replace(/&amp;/g, \"&\")\n    .replace(/&quot;/g, '\"')\n    .replace(/&#39;/g, \"'\")\n    .replace(/&lt;/g, \"<\")\n    .replace(/&gt;/g, \">\")\n    .replace(/&nbsp;/g, \" \")\n    .replace(/&#x20B9;|&#8377;/g, \"₹\")\n    .replace(/&euro;|&#8364;/g, \"€\");\n}\n\nfunction extractHrefs(html) {\n  const hrefs = [];\n  const re = /href=\"([^\"]+)\"/gi;   // IMPORTANT: global regex -> gets all matches\n  let m;\n  while ((m = re.exec(html)) !== null) {\n    hrefs.push(m[1]);\n  }\n  return hrefs;\n}\n\nfunction getParam(url, key) {\n  try {\n    const u = new URL(url);\n    return u.searchParams.get(key);\n  } catch (e) {\n    const m = url.match(new RegExp(`[?&]${key}=([^&]+)`));\n    return m ? decodeURIComponent(m[1]) : null;\n  }\n}\n\nconst out = [];\nconst seen = new Set();\n\nfor (const item of items) {\n  const j = item.json || {};\n\n  // Prefer HTML because it’s more structured\n  const raw = j.textAsHtml || j.textAsHTML || j.html || j.text || \"\";\n  if (!raw) continue;\n\n  const html = decodeHtml(raw);\n\n  const hrefs = extractHrefs(html);\n\n  for (const href0 of hrefs) {\n    const href = decodeHtml(href0).trim();\n\n    // Keep ONLY real Glassdoor job listing links\n    // Example: https://www.glassdoor.co.in/partner/jobListing.htm?...&jobListingId=1009...\n    const isJobListing =\n      /glassdoor\\./i.test(href) &&\n      /\\/partner\\/jobListing\\.htm/i.test(href) &&\n      /[?&]jobListingId=\\d+/i.test(href);\n\n    if (!isJobListing) continue;\n\n    const jobListingId = getParam(href, \"jobListingId\");\n    const uniqueKey = jobListingId ? `glassdoor:${jobListingId}` : `glassdoor:${href}`;\n\n    if (seen.has(uniqueKey)) continue;\n    seen.add(uniqueKey);\n\n    out.push({\n      platform: \"glassdoor\",\n      jobUrl: href,\n      jobListingId: jobListingId || null,\n      uniqueKey,\n    });\n  }\n}\n\nreturn out.map(r => ({ json: r }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        2304
+      ],
+      "id": "22b3bce0-48e7-4b75-979a-343d44c1c870",
+      "name": "Glassdoor_parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n/**\n * Extract jobListingId from any Glassdoor URL:\n * - partner link: ...jobListingId=1009...\n * - public job page: ...?jl=1009... OR ...jobListingId=1009...\n */\nfunction extractGlassdoorJobId(url) {\n  const s = String(url || \"\");\n  const m =\n    s.match(/[?&]jobListingId=(\\d+)/i) ||\n    s.match(/[?&]jl=(\\d+)/i);\n  return m ? m[1] : null;\n}\n\n/**\n * Normalize to the Bright Data-friendly URL.\n * - If URL already matches /job-listing/... keep it (but ensure jl= is present if we have an id)\n * - If URL is /partner/jobListing.htm?... convert to /job-listing/ placeholder with ?jl=<id>\n *\n * NOTE: We don't know the slug path from partner links, but Bright Data primarily needs a valid\n * glassdoor.com/job-listing URL with jl=<id>. This works well in practice.\n */\nfunction normalizeGlassdoorForBrightData(rawUrl) {\n  const s = String(rawUrl || \"\").trim();\n  if (!s) return null;\n\n  const id = extractGlassdoorJobId(s);\n\n  // If it's already a public /job-listing URL:\n  if (/glassdoor\\.com\\/job-listing\\//i.test(s)) {\n    // Ensure we have jl=<id> if we managed to extract id\n    if (id && !/[?&]jl=\\d+/i.test(s)) {\n      const u = new URL(s);\n      u.searchParams.set(\"jl\", id);\n      return u.toString();\n    }\n    return s;\n  }\n\n  // If it's a /partner/jobListing.htm link: convert using the id\n  if (/glassdoor\\./i.test(s) && /\\/partner\\/jobListing\\.htm/i.test(s)) {\n    if (!id) return null;\n\n    // Bright Data expects glassdoor.com domain, not .co.in\n    // Also, create a stable canonical \"job-listing\" URL using the id.\n    return `https://www.glassdoor.com/job-listing/job-JV.htm?jl=${id}`;\n  }\n\n  // fallback: if it's some other glassdoor link but has an id, still build a canonical URL\n  if (/glassdoor\\./i.test(s) && id) {\n    return `https://www.glassdoor.com/job-listing/job-JV.htm?jl=${id}`;\n  }\n\n  return null;\n}\n\nconst out = [];\n\nfor (const item of items) {\n  const j = item.json || {};\n  const rawUrl = j.jobUrl || j.url || j.link || \"\";\n  const brightdataUrl = normalizeGlassdoorForBrightData(rawUrl);\n\n  if (!brightdataUrl) continue;\n\n  out.push({\n    json: {\n      ...j,\n      brightdataUrl,\n    }\n  });\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        2304
+      ],
+      "id": "3eb21a16-4a83-4bf3-a5d4-6f9a05e143a2",
+      "name": "Glassdoor_cleaning_block"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn [{\n  json: {\n    input: items\n      .map(i => i.json?.brightdataUrl)\n      .filter(Boolean)\n      .map(url => ({ url }))\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        2304
+      ],
+      "id": "1505d1d0-eec2-4911-89ab-61a31a448e02",
+      "name": "Glassdoor_cleaning_block_1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.brightdata.com/datasets/v3/trigger",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "dataset_id",
+              "value": "gd_lpfll7v5hcqtkxl6l"
+            },
+            {
+              "name": "include_errors",
+              "value": "true"
+            },
+            {
+              "name": "limit_multiple_results",
+              "value": "5"
+            },
+            {
+              "name": "limit_per_input",
+              "value": "20"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 6a76420efd02bc22317ce6105eb60eae4c4e604ddc02bb17561efcbc021859d9"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        240,
+        2016
+      ],
+      "id": "611cc1d0-4a4b-43b9-812d-118fce338c3f",
+      "name": "Brightdata_linkedin_request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.brightdata.com/datasets/v3/trigger",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "dataset_id",
+              "value": "gd_lpfbbndm1xnopbrcr0"
+            },
+            {
+              "name": "include_errors",
+              "value": "true"
+            },
+            {
+              "name": "limit_multiple_results",
+              "value": "5"
+            },
+            {
+              "name": "limit_per_input",
+              "value": "20"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 6a76420efd02bc22317ce6105eb60eae4c4e604ddc02bb17561efcbc021859d9"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        240,
+        2304
+      ],
+      "id": "b3c4a8bf-953a-436c-ba44-d475579c70cd",
+      "name": "brightdata_glassdoor_request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.brightdata.com/datasets/v3/trigger",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "dataset_id",
+              "value": "gd_l4dx9j9sscpvs7no2"
+            },
+            {
+              "name": "include_errors",
+              "value": "true"
+            },
+            {
+              "name": "limit_multiple_results",
+              "value": "5"
+            },
+            {
+              "name": "limit_per_input",
+              "value": "20"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 6a76420efd02bc22317ce6105eb60eae4c4e604ddc02bb17561efcbc021859d9"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        240,
+        2592
+      ],
+      "id": "27dee6df-d08e-4c94-9710-17d00f3b4a60",
+      "name": "Brightdata_indeed_request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nfunction decodeHtml(s) {\n  return String(s || \"\")\n    .replace(/&nbsp;/gi, \" \")\n    .replace(/&amp;/gi, \"&\")\n    .replace(/&quot;/gi, '\"')\n    .replace(/&#39;|&apos;/gi, \"'\")\n    .replace(/&lt;/gi, \"<\")\n    .replace(/&gt;/gi, \">\")\n    .replace(/&euro;/gi, \"€\")\n    .replace(/&ndash;/gi, \"–\")\n    .replace(/&rsquo;/gi, \"’\");\n}\n\nfunction stripTags(html) {\n  return decodeHtml(String(html || \"\"))\n    .replace(/<br\\s*\\/?>/gi, \"\\n\")\n    .replace(/<\\/p>/gi, \"\\n\")\n    .replace(/<[^>]+>/g, \"\")\n    .replace(/\\r/g, \"\")\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .trim();\n}\n\nfunction getParagraphs(html) {\n  const h = String(html || \"\");\n  return h\n    .split(/<\\/p>/i)\n    .map(p => p.replace(/^\\s*<p[^>]*>/i, \"\").trim())\n    .filter(Boolean)\n    .map(p => stripTags(p));\n}\n\nfunction getParam(url, key) {\n  try {\n    const u = new URL(url);\n    return u.searchParams.get(key);\n  } catch (e) {\n    const m = String(url || \"\").match(new RegExp(`[?&]${key}=([^&]+)`));\n    return m ? decodeURIComponent(m[1]) : null;\n  }\n}\n\nfunction extractIndeedJobId(url) {\n  return getParam(url, \"xkcb\"); // best stable key in your sample\n}\n\nfunction extractCompany(line) {\n  // \"AXS Techniek - Oosterhout\" -> \"AXS Techniek\"\n  const parts = String(line || \"\").split(\" - \").map(s => s.trim()).filter(Boolean);\n  return parts.length ? parts[0] : String(line || \"\").trim();\n}\n\nfunction isFooterText(txt) {\n  const t = (txt || \"\").toLowerCase();\n  return (\n    t.includes(\"deel deze e-mail niet\") ||\n    t.includes(\"privacybeleid\") ||\n    t.includes(\"voorwaarden\") ||\n    t.includes(\"helpcenter\") ||\n    t.includes(\"e-mailinstellingen\") ||\n    t.includes(\"afmelden\") ||\n    t.includes(\"indeed ireland operations\") ||\n    t.includes(\"©\")\n  );\n}\n\n// Extract ALL hrefs from raw HTML\nfunction extractHrefs(html) {\n  const hrefs = [];\n  const re = /href=\"([^\"]+)\"/gi;\n  let m;\n  while ((m = re.exec(html)) !== null) hrefs.push(m[1]);\n  return hrefs;\n}\n\n// Keep only Indeed click/tracking links for job cards\nfunction isIndeedJobClickUrl(u) {\n  const s = String(u || \"\");\n  return (\n    /^https:\\/\\/[^/]*indeed\\.com\\//i.test(s) &&\n    /\\/(pagead\\/clk|rc\\/clk|clk)\\//i.test(s)\n  );\n}\n\nlet out = [];\nconst seen = new Set();\n\nfor (const item of items) {\n  const j = item.json || {};\n  const htmlRaw = j.textAsHtml || j.textAsHTML || \"\";\n  if (!htmlRaw) continue;\n\n  const html = decodeHtml(htmlRaw);\n\n  // 1) Extract ALL click URLs from HTML\n  const allHrefs = extractHrefs(html).map(decodeHtml);\n  const clickUrls = allHrefs.filter(isIndeedJobClickUrl);\n\n  // 2) Also parse <p> blocks so we can map jobTitle/company to each click url\n  //    (Because each job card is usually one <p> containing title, company, etc + click link)\n  const paragraphs = getParagraphs(html);\n\n  for (const p of paragraphs) {\n    if (!p) continue;\n    if (isFooterText(p)) break;\n\n    // Paragraph must contain a click url\n    const hasClick = /https:\\/\\/[^/]*indeed\\.com\\/(?:pagead\\/clk|rc\\/clk|clk)\\//i.test(p);\n    if (!hasClick) continue;\n\n    const lines = p.split(\"\\n\").map(s => s.trim()).filter(Boolean);\n\n    // Find the first click URL inside this paragraph\n    const jobUrl = lines.find(l => isIndeedJobClickUrl(l));\n    if (!jobUrl) continue;\n\n    const jobId = extractIndeedJobId(jobUrl);\n\n    // Extract title + company (best-effort)\n    // Pattern in your sample:\n    // 0: Title\n    // 1: Company - Location\n    let jobTitle = null;\n    let company = null;\n\n    // find first meaningful title\n    for (let idx = 0; idx < lines.length; idx++) {\n      const l = lines[idx];\n\n      // skip generic / header-ish lines\n      if (/^vacature/i.test(l)) continue;\n      if (/toon passende resultaten/i.test(l.toLowerCase())) continue;\n      if (/indeed vacature-alert/i.test(l.toLowerCase())) continue;\n\n      // avoid picking the link itself as title\n      if (isIndeedJobClickUrl(l)) continue;\n\n      jobTitle = l;\n\n      // find company line after title\n      for (let k = idx + 1; k < lines.length; k++) {\n        if (lines[k].includes(\" - \") && !isIndeedJobClickUrl(lines[k])) {\n          company = extractCompany(lines[k]);\n          break;\n        }\n      }\n      break;\n    }\n\n    const uniqueKey = jobId ? `indeed:${jobId}` : `indeed:${jobUrl}`;\n    if (seen.has(uniqueKey)) continue;\n    seen.add(uniqueKey);\n\n    out.push({\n      platform: \"indeed\",\n      jobUrl,\n      jobId: jobId || null,\n      jobTitle: jobTitle || null,\n      company: company || null,\n      uniqueKey\n    });\n  }\n\n  // 3) Safety net: if paragraph-based extraction fails, still output URLs\n  //    (prevents “missed links” cases)\n  for (const url of clickUrls) {\n    const jobId = extractIndeedJobId(url);\n    const uniqueKey = jobId ? `indeed:${jobId}` : `indeed:${url}`;\n    if (seen.has(uniqueKey)) continue;\n    seen.add(uniqueKey);\n\n    out.push({\n      platform: \"indeed\",\n      jobUrl: url,\n      jobId: jobId || null,\n      jobTitle: null,\n      company: null,\n      uniqueKey\n    });\n  }\n}\n\nreturn out.map(r => ({ json: r }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        2592
+      ],
+      "id": "7aba03f1-0c86-4857-82c8-b80f4e1797e5",
+      "name": "Indeed_parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nfunction extractIndeedXkcb(url) {\n  try {\n    const u = new URL(String(url || \"\"));\n    return u.searchParams.get(\"xkcb\");\n  } catch (e) {}\n  const m = String(url || \"\").match(/[?&]xkcb=([^&]+)/);\n  return m ? decodeURIComponent(m[1]) : null;\n}\n\n/**\n * Bright Data (and many scrapers) prefer Indeed \"viewjob\" URLs.\n * The click URL still works in a browser, but some scrapers validate patterns.\n *\n * Strategy:\n * - If we already have a /viewjob or /rc/clk etc., keep it.\n * - Else, convert click link to a stable /viewjob?jk=<xkcb> URL.\n *   (In your pipeline you already store xkcb as jobId.)\n */\nfunction normalizeIndeedForBrightData(rawUrl, jobId) {\n  const s = String(rawUrl || \"\").trim();\n  if (!s) return null;\n\n  // Already a \"good\" URL shape? keep it.\n  if (/indeed\\./i.test(s) && (s.includes(\"/viewjob\") || s.includes(\"/rc/clk\") || s.includes(\"/pagead/clk\"))) {\n    // If Bright Data requires /viewjob, we will still convert non-viewjob below\n  }\n\n  const xkcb = jobId || extractIndeedXkcb(s);\n\n  // If already viewjob, keep as-is (but add jk if missing and we have it)\n  if (/\\/viewjob/i.test(s)) {\n    if (xkcb && !/[?&]jk=/.test(s)) {\n      try {\n        const u = new URL(s);\n        u.searchParams.set(\"jk\", xkcb);\n        return u.toString();\n      } catch (e) {}\n    }\n    return s;\n  }\n\n  // Convert click URL => stable viewjob URL using jk=xkcb\n  if (xkcb) {\n    // keep same locale domain if present (nl.indeed.com etc.)\n    const domainMatch = s.match(/^https?:\\/\\/([^/]+indeed\\.[^/]+)\\//i);\n    const host = domainMatch ? domainMatch[1] : \"nl.indeed.com\";\n    return `https://${host}/viewjob?jk=${encodeURIComponent(xkcb)}`;\n  }\n\n  // If no xkcb found, fallback to the original URL (might still work depending on scraper settings)\n  return s;\n}\n\nconst out = [];\n\nfor (const item of items) {\n  const j = item.json || {};\n  const rawUrl = j.jobUrl || j.url || j.link || \"\";\n  const jobId = j.jobId || null;\n\n  const brightdataUrl = normalizeIndeedForBrightData(rawUrl, jobId);\n  if (!brightdataUrl) continue;\n\n  out.push({\n    json: {\n      ...j,\n      brightdataUrl,\n    }\n  });\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        2592
+      ],
+      "id": "af32d142-7cab-474e-b02a-1a3ae39d111c",
+      "name": "Indeed_cleaning_block"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn [{\n  json: {\n    input: items\n      .map(i => i.json?.brightdataUrl)\n      .filter(Boolean)\n      .map(url => ({ url }))\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        2592
+      ],
+      "id": "635884ef-b6ec-48a9-94ec-35f9176e8d07",
+      "name": "Indeed_cleaning_block_1"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.brightdata.com/datasets/v3/progress/{{$json.snapshot_id}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 6a76420efd02bc22317ce6105eb60eae4c4e604ddc02bb17561efcbc021859d9"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        464,
+        2016
+      ],
+      "id": "43d615e1-0e90-4e6e-bed6-7e68a4665cdf",
+      "name": "BD_Status_check"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.brightdata.com/datasets/v3/progress/{{$json.snapshot_id}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 6a76420efd02bc22317ce6105eb60eae4c4e604ddc02bb17561efcbc021859d9"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        464,
+        2304
+      ],
+      "id": "d52ea285-9801-4125-b870-4bf0b5e1a1d9",
+      "name": "BD_status_check"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.brightdata.com/datasets/v3/progress/{{$json.snapshot_id}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 6a76420efd02bc22317ce6105eb60eae4c4e604ddc02bb17561efcbc021859d9"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        464,
+        2592
+      ],
+      "id": "637a5474-144e-49f5-8143-ca35edb1c6f4",
+      "name": "BD_status_check1"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        688,
+        2224
+      ],
+      "id": "cd4a8027-daea-449b-8369-b8e8446f2108",
+      "name": "Wait3",
+      "webhookId": "22a7ab8f-96b2-41ad-a37e-396d0dcf48d4"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.brightdata.com/datasets/v3/snapshot/{{$json.snapshot_id}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "format",
+              "value": "json"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 6a76420efd02bc22317ce6105eb60eae4c4e604ddc02bb17561efcbc021859d9"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1136,
+        2016
+      ],
+      "id": "8095dd80-cd3f-4d6b-83b1-2e4f77053798",
+      "name": "Linkedin_snapshot_collector"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.brightdata.com/datasets/v3/snapshot/{{$json.snapshot_id}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "format",
+              "value": "json"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 6a76420efd02bc22317ce6105eb60eae4c4e604ddc02bb17561efcbc021859d9"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1136,
+        2304
+      ],
+      "id": "532855bb-854a-49d1-93c4-abb7b97b90ec",
+      "name": "Glassdoor_snapshot_collector"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.brightdata.com/datasets/v3/snapshot/{{$json.snapshot_id}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "format",
+              "value": "json"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 6a76420efd02bc22317ce6105eb60eae4c4e604ddc02bb17561efcbc021859d9"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1136,
+        2592
+      ],
+      "id": "ad8e2271-94fd-4252-b3fb-a0403a769eb1",
+      "name": "Indeed_snapshot_collector"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d73c361-0d7e-4eb1-ab16-39b72e70a3e0",
+              "name": "platform",
+              "value": "={{ $json.platform }}",
+              "type": "string"
+            },
+            {
+              "id": "02dfed78-59c6-4e16-a404-4106fdd464b9",
+              "name": "jobId",
+              "value": "={{ $json.jobId }}",
+              "type": "string"
+            },
+            {
+              "id": "ad22790b-f01c-4c38-819b-fd304803aa0b",
+              "name": "jobTitle",
+              "value": "={{ $json.jobTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "d71e0eef-66a5-4ac1-b252-c66baa2831d6",
+              "name": "company",
+              "value": "={{ $json.company }}",
+              "type": "string"
+            },
+            {
+              "id": "2a61d9f1-ebb4-4267-ae41-af94672d0c37",
+              "name": "location",
+              "value": "={{ $json.location }}",
+              "type": "string"
+            },
+            {
+              "id": "45c3ac6f-9cf6-4561-afef-8bb0268c0787",
+              "name": "jobUrl",
+              "value": "={{ $json.jobUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "cadfdcbb-9eff-42cd-b285-52d4ce7ee468",
+              "name": "applyUrl",
+              "value": "={{ $json.applyUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "b137022c-573d-47ae-8550-96aa9d6479f9",
+              "name": "description",
+              "value": "={{ $json.description }}",
+              "type": "string"
+            },
+            {
+              "id": "1dcb2330-de1b-43df-8013-9ade7f841207",
+              "name": "postedAt",
+              "value": "={{ $json.postedAt }}",
+              "type": "string"
+            },
+            {
+              "id": "fff60996-3857-4a18-b684-d3c28db7097e",
+              "name": "scrapedAt",
+              "value": "={{ $json.scrapedAt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1584,
+        2416
+      ],
+      "id": "115f0b91-4905-4003-aa34-3c9361346b5f",
+      "name": "Standard_structure_generator"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a job-matching filter.\n\nCRITICAL OUTPUT RULES:\n- Output MUST be a single JSON object (not a JSON string).\n- The first character must be { and the last character must be }.\n- Output ONLY JSON. No markdown, no extra text, no code fences.\n- Do NOT add any keys that are not explicitly listed below.\n- You MUST include every field listed below.\n- If a value is unknown/missing:\n  - use null only for fields that allow null\n  - otherwise use an empty string \"\" for string fields\n  - arrays must always be arrays (use [] if empty)\n\nMATCHING RULES:\n- Use ONLY the CV profile contents as truth.\n- Do NOT assume skills not present in the CV profiles.\n- matchedProfileId must be exactly one of:\n  cv_embedded, cv_robotics, cv_ai, cv_edge_ai, none\n- fitScore is an integer from 0 to 100\n- decision rules:\n  KEEP if fitScore >= 70\n  MAYBE if 45–69\n  SKIP if <45 or matchedProfileId is \"none\"\n\nIMPORTANT IDENTITY RULE (DO NOT SKIP):\n- You MUST copy the following fields EXACTLY as provided in INPUT JOB.\n- Do NOT modify, summarize, infer, or regenerate them.\n- These fields are used as identifiers for downstream merging.\n\nFIELDS TO ECHO BACK EXACTLY:\n- uniqueKey\n- jobId\n- platform\n- jobTitle\n- company\n- location\n- jobUrl\n- applyUrl\n- postedAt\n- scrapedAt\n\nINPUT JOB:\nuniqueKey: {{$json.uniqueKey}}\njobId: {{$json.jobId}}\nplatform: {{$json.platform}}\njobTitle: {{$json.jobTitle}}\ncompany: {{$json.company}}\nlocation: {{$json.location}}\njobUrl: {{$json.jobUrl}}\napplyUrl: {{$json.applyUrl}}\npostedAt: {{$json.postedAt}}\nscrapedAt: {{$json.scrapedAt}}\ndescription: {{$json.description}}\n\nCV PROFILES:\ncv_embedded: {{$json.cv_embedded}}\ncv_robotics: {{$json.cv_robotics}}\ncv_ai: {{$json.cv_ai}}\ncv_edge_ai: {{$json.cv_edge_ai}}\n\nOUTPUT JSON OBJECT (MUST INCLUDE ALL OF THESE KEYS):\n\n{\n  \"uniqueKey\": \"\",\n  \"jobId\": \"\",\n  \"platform\": \"\",\n  \"jobTitle\": \"\",\n  \"company\": \"\",\n  \"location\": null,\n  \"jobUrl\": null,\n  \"applyUrl\": null,\n  \"postedAt\": null,\n  \"scrapedAt\": null,\n\n  \"matchedProfileId\": \"\",\n  \"fitScore\": 0,\n  \"decision\": \"\",\n\n  \"matchedEvidence\": [],\n  \"missingEvidence\": [],\n  \"reason\": [],\n  \"notionTags\": []\n}\n\nADDITIONAL OUTPUT GUIDELINES:\n- matchedEvidence: short phrases, max 8 words each\n- missingEvidence: short phrases, max 8 words each\n- reason: 1–5 short bullet-style strings, max 12 words each\n- notionTags: short tags (single words or short phrases)\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2256,
+        2416
+      ],
+      "id": "4fbd91fa-a5ed-4bb7-9576-29bc6cdd4f45",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  const out = item.json.output;\n  if (typeof out === \"string\") {\n    item.json = JSON.parse(out);\n  }\n  return item;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2608,
+        2416
+      ],
+      "id": "7b4bfc36-2994-4726-b011-3184d67ade15",
+      "name": "Output_parser"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c0201393-38df-45bb-9063-6e7f94aade10",
+              "leftValue": "={{ $json.decision }}",
+              "rightValue": "=KEEP",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "267b97b5-39c5-4d21-81ee-fef8ac2c0fd2",
+              "leftValue": "={{ $json.decision }}",
+              "rightValue": "=MAYBE",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2832,
+        2416
+      ],
+      "id": "d7a9e801-2a42-42b1-942f-0323f3dd3b03",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "36f8306b-d95e-43e6-b1ee-6e7839cc4203",
+              "name": "notion_company",
+              "value": "={{ $json.company ?? \"Unknown Company\" }}\n",
+              "type": "string"
+            },
+            {
+              "id": "72488f8e-6826-4d9b-b084-ae55a521f2ed",
+              "name": "notion_jobTitle",
+              "value": "={{ $json.jobTitle ?? \"Job title not provided\" }}\n",
+              "type": "string"
+            },
+            {
+              "id": "1d622cea-6031-4a82-af5e-06d86f86014b",
+              "name": "notion_category",
+              "value": "={{  ({    cv_embedded: \"Embedded\",    cv_robotics: \"Robotics\",    cv_ai: \"AI\",    cv_edge_ai: \"Edge AI\",    none: \"Other\"  })[$json.matchedProfileId] ?? \"Other\"}}",
+              "type": "string"
+            },
+            {
+              "id": "bd6d6707-8dfd-4831-8d74-718852f5d62b",
+              "name": "notion_platform",
+              "value": "={{ $json.platform ?? ($json.jobId?.includes(\"glassdoor\") ? \"glassdoor\" : \"unknown\") }}\n",
+              "type": "string"
+            },
+            {
+              "id": "6166ffdf-20fa-44fa-9a0b-3a7b4e5e5746",
+              "name": "notion_link",
+              "value": "={{ $json.jobUrl ?? null }}",
+              "type": "string"
+            },
+            {
+              "id": "e83cac8d-d9bc-4c1e-8cde-8e69d25432cf",
+              "name": "notion_decision",
+              "value": "={{ $json.decision }}",
+              "type": "string"
+            },
+            {
+              "id": "e8ad39a7-9fc7-405b-842d-dca615db8f30",
+              "name": "notion_fitScore",
+              "value": "={{ $json.fitScore }}",
+              "type": "number"
+            },
+            {
+              "id": "87b97a35-d90f-4ede-8508-fecd860303f7",
+              "name": "notion_tags",
+              "value": "={{ $json.notionTags ?? [] }}",
+              "type": "array"
+            },
+            {
+              "id": "0e134d2e-e7b0-445d-8518-f897df983c11",
+              "name": "notion_reasonText",
+              "value": "={{ ($json.reason ?? []).join(\" • \") }}",
+              "type": "string"
+            },
+            {
+              "id": "62c737d1-6837-4fd6-a4d9-e1acf6674609",
+              "name": "notion_dateSaw",
+              "value": "={{ ($json.postedAt ? $json.postedAt.slice(0,10) : $now.toISODate()) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3056,
+        2416
+      ],
+      "id": "5c0ee8c2-78de-4e21-84ef-73d45fd094f6",
+      "name": "Fill_structure_block"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Shared cleanup block (safe for BOTH email + keyword lanes)\n// - preserves upstream uniqueKey if provided\n// - avoids turning null into \"null\"\n// - only clamps description\n\nfunction isNullish(v) {\n  return v === null || v === undefined;\n}\n\nfunction trimOrEmpty(v) {\n  if (isNullish(v)) return \"\";\n  return String(v).trim();\n}\n\nfunction trimOrNull(v) {\n  if (isNullish(v)) return null;\n  const s = String(v).trim();\n  return s.length ? s : null;\n}\n\nconst MAX_DESC = 6000;\n\nreturn $input.all().map(item => {\n  const j = item.json || {};\n\n  const platform = trimOrEmpty(j.platform).toLowerCase();\n  const jobId = trimOrEmpty(j.jobId);\n  const jobUrl = trimOrNull(j.jobUrl);          // keep null if null\n  const company = trimOrEmpty(j.company);\n  const jobTitle = trimOrEmpty(j.jobTitle);\n\n  // Preserve upstream uniqueKey if present & non-empty\n  let uniqueKey = trimOrEmpty(j.uniqueKey);\n\n  if (!uniqueKey) {\n    uniqueKey =\n      (platform && jobId) ? `${platform}:${jobId}` :\n      (platform && jobUrl) ? `${platform}:${jobUrl}` :\n      `${platform}:${company}:${jobTitle}`.toLowerCase();\n  }\n\n  // Clamp description but keep it as a string\n  const desc = isNullish(j.description) ? \"\" : String(j.description);\n  const description =\n    desc.length > MAX_DESC ? desc.slice(0, MAX_DESC) + \"…[TRUNCATED]\" : desc;\n\n  return {\n    json: {\n      ...j,\n      platform,          // normalized but not destructive\n      jobId,             // trimmed\n      company,           // trimmed\n      jobTitle,          // trimmed\n      jobUrl,            // null-safe\n      description,\n      uniqueKey,\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1808,
+        2416
+      ],
+      "id": "4946c20e-8da6-48f1-a39d-b802f4b71c5f",
+      "name": "Strcuture_cleaning_up_block2"
+    },
+    {
+      "parameters": {
+        "path": "56dc4dcb-8e78-417a-b548-eb0dd795daf0",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1552,
+        2880
+      ],
+      "id": "f7589f0e-512e-4717-8995-e41f034ba3b3",
+      "name": "Webhook",
+      "webhookId": "56dc4dcb-8e78-417a-b548-eb0dd795daf0"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "<!doctype html>\n<html>\n  <body style=\"font-family: sans-serif; padding: 20px;\">\n    <h3>Email Parser</h3>\n    <form method=\"POST\" action=\"https://nmalladi.app.n8n.cloud/webhook/b0066991-086c-4ba2-8f90-1af813850807\">\n\n      <label>Pick date:</label><br/>\n      <input type=\"date\" name=\"runDate\" required />\n      <br/><br/>\n      <button type=\"submit\">Run</button>\n    </form>\n  </body>\n</html>\n",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -1328,
+        2880
+      ],
+      "id": "e1d662a2-2705-4060-87c4-d248542fe4ea",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "b0066991-086c-4ba2-8f90-1af813850807",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1552,
+        2544
+      ],
+      "id": "9187fc8b-946b-41a6-94d2-29de04d7d9e6",
+      "name": "Webhook1",
+      "webhookId": "b0066991-086c-4ba2-8f90-1af813850807"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const runDate = $json.runDate || $json.body?.runDate;\n\nconst start = new Date(runDate + \"T00:00:00\");\nconst end   = new Date(runDate + \"T23:59:59\");\n\nconst after  = Math.floor(start.getTime() / 1000);\nconst before = Math.floor(end.getTime() / 1000);\n\nreturn {\n  ...$json,\n  gmailQuery: `after:${after} before:${before}`,\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1328,
+        2544
+      ],
+      "id": "cbec97e6-0513-4108-840d-680d525b55dc",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linkedin_cleaning_block": {
+      "main": [
+        [
+          {
+            "node": "Linkedin_cleaning_block_2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Linkedin_snapshot_collector",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "BD_Status_check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linkedin_cleaning_block_2": {
+      "main": [
+        [
+          {
+            "node": "Brightdata_linkedin_request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Glassdoor_snapshot_collector",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "BD_status_check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Indeed_snapshot_collector",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "BD_status_check1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalise_linkedin": {
+      "main": [
+        [
+          {
+            "node": "Standard_structure_generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalise_glassdoor": {
+      "main": [
+        [
+          {
+            "node": "Standard_structure_generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalise_indeed": {
+      "main": [
+        [
+          {
+            "node": "Standard_structure_generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set-CV": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a database page": {
+      "main": [
+        [
+          {
+            "node": "Loop over",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark a message as read": {
+      "main": [
+        []
+      ]
+    },
+    "Loop over": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Linkedin, glassdoor,indeed segregator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Emails from Followup label": {
+      "main": [
+        [
+          {
+            "node": "Loop over",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linkedin, glassdoor,indeed segregator": {
+      "main": [
+        [
+          {
+            "node": "Linkedin_parser",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Glassdoor_parser",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Indeed_parser",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Linkedin_parser",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Linkedin_parser",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        []
+      ]
+    },
+    "Linkedin_parser": {
+      "main": [
+        [
+          {
+            "node": "Linkedin_cleaning_block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Glassdoor_parser": {
+      "main": [
+        [
+          {
+            "node": "Glassdoor_cleaning_block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Glassdoor_cleaning_block": {
+      "main": [
+        [
+          {
+            "node": "Glassdoor_cleaning_block_1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Glassdoor_cleaning_block_1": {
+      "main": [
+        [
+          {
+            "node": "brightdata_glassdoor_request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brightdata_linkedin_request": {
+      "main": [
+        [
+          {
+            "node": "BD_Status_check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "brightdata_glassdoor_request": {
+      "main": [
+        [
+          {
+            "node": "BD_status_check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brightdata_indeed_request": {
+      "main": [
+        [
+          {
+            "node": "BD_status_check1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Indeed_parser": {
+      "main": [
+        [
+          {
+            "node": "Indeed_cleaning_block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Indeed_cleaning_block": {
+      "main": [
+        [
+          {
+            "node": "Indeed_cleaning_block_1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Indeed_cleaning_block_1": {
+      "main": [
+        [
+          {
+            "node": "Brightdata_indeed_request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BD_Status_check": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BD_status_check": {
+      "main": [
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BD_status_check1": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linkedin_snapshot_collector": {
+      "main": [
+        [
+          {
+            "node": "Normalise_linkedin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Glassdoor_snapshot_collector": {
+      "main": [
+        [
+          {
+            "node": "Normalise_glassdoor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Indeed_snapshot_collector": {
+      "main": [
+        [
+          {
+            "node": "Normalise_indeed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standard_structure_generator": {
+      "main": [
+        [
+          {
+            "node": "Strcuture_cleaning_up_block2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Output_parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output_parser": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Fill_structure_block",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop over",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fill_structure_block": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Strcuture_cleaning_up_block2": {
+      "main": [
+        [
+          {
+            "node": "Set-CV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Emails from Followup label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "c282fb9b-dcad-4aee-8215-524cdae00036",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "929d6500140b1d62b2d7953ec4d872de18392f551469ba0c1e65799d534007a3"
+  },
+  "id": "dWNvJdQ6uBPnYFTl",
+  "tags": []
+}
