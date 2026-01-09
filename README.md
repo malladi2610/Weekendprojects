@@ -31,6 +31,9 @@ This n8n-powered agent monitors Gmail for job postings from LinkedIn, Glassdoor,
 - Scheduled daily execution for consistent workflow
 - Smart categorization and priority assignment
 
+**Security:**  
+Sensitive credentials and API keys are protected. See [SETUP.md](./n8n_gmail_AI_agent/SETUP.md) for configuration instructions.
+
 **Tech Stack:** n8n, AI/LLM APIs, Gmail API, Notion API
 
 ---
